@@ -121,5 +121,5 @@ async def tram3(ctx):
 
 
 bot.run(token)
-print("Bot Read to use :)")
+print("Bot Read to use :D")
 random.seed(1)
