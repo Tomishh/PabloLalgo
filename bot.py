@@ -107,19 +107,37 @@ async def duel(ctx):
 
 @bot.command(pass_contexte=True) #show hour lines
 async def tram3(ctx):
-    set
+    # heure_min =24
+    # minute_min =60 
+    # seconde_min =60
     with open('data.txt') as json_file:
         data = json.load(json_file)
     for i in data:
         if i['fields']['numero_arret_stop_id'] == '1108141' and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
             await ctx.send(i['fields']['horaire_arrivee_theorique'])
-            stringtemp=i['fields']['horaire_arrivee_theorique']
-            [int(s) for s in stringtemp.split() if s.isdigit()]
-            
-            
+            # stringtemp=i['fields']['horaire_arrivee_theorique']
+            # array= stringtemp.split(':')
+            # heure= array[0]
+            # await ctx.send(heure)
+            # minute= array[1]
+            # await ctx.send(minute)
+            # seconde= array[2]
+            # await ctx.send(seconde)
+    #         if heure < heure_min:
+    #             heure_min = heure
+    #             minute_min = minute
+    #             seconde_min = seconde
+    #         if heure == heure_min and minute < minute_min:
+    #             heure_min = heure
+    #             minute_min = minute
+    #             seconde_min = seconde
+    #         if heure == heure_min and minute == minute_min and seconde < seconde_min:
+    #             heure_min = heure
+    #             minute_min = minute
+    #             seconde_min = seconde
+    # await ctx.send(f"Heure d'arrivé du tram le plus proche : {heure_min}:{minute_min}:{seconde_min}")
 
 
-
-bot.run(token)
 print("Bot Read to use :)")
+bot.run(token)
 random.seed(1)
