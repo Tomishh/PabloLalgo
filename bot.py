@@ -13,7 +13,30 @@ token= file.read()
 client = discord.Client()
 bot = commands.Bot(command_prefix="r!")
 
-
+def heure_mini_fonc(liste_timing):
+    h_min = 24
+    min_min = 60
+    sec_min = 60
+    for i in liste_timing:
+        liste_cut=liste_timing[i]
+        array=liste_cut.split(':')
+        heure=int(array[0])
+        minute=int(array[1])
+        seconde=int(array[2])
+        if heure < h_min:
+            h_min = heure
+            min_min = minute
+            sec_min = seconde
+        if heure < h_min and minute < min_min :
+            h_min = heure
+            min_min = minute
+            sec_min = seconde
+        if  heure < h_min and minute < min_min and seconde < sec_min:
+            h_min = heure
+            min_min = minute
+            sec_min = seconde
+    string_min=f"{h_min}:{min_min}:{sec_min}"
+    return string_min
 
 
 
@@ -118,48 +141,70 @@ async def tram3(ctx):
 
     with open('data.txt') as json_file:
         data = json.load(json_file)
+        string_arrive = []
+        string_depart = []
     for i in data:
         if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
             stringtemp_arrive_clg=i['fields']['horaire_arrivee_theorique']
-            array_arrive_clg= stringtemp_arrive_clg.split(':')
-            heure_arrive_clg= int(array_arrive_clg[0])
-            minute_arrive_clg= int(array_arrive_clg[1])
-            seconde_arrive_clg= int(array_arrive_clg[2])
-            if heure_arrive_clg < heure_min_arrive_clg:
-                heure_min_arrive_clg = heure_arrive_clg
-                minute_min_arrive_clg = minute_arrive_clg
-                seconde_min_arrive_clg = seconde_arrive_clg
-            if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg < minute_min_arrive_clg:
-                heure_min_arrive_clg = heure_arrive_clg
-                minute_min_arrive_clg = minute_arrive_clg
-                seconde_min_arrive_clg = seconde_arrive_clg
-            if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg == minute_min_arrive_clg and seconde_arrive_clg < seconde_min_arrive_clg:
-                heure_min_arrive_clg = heure_arrive_clg
-                minute_min_arrive_clg = minute_arrive_clg
-                seconde_min_arrive_clg = seconde_arrive_clg
+            string_depart.append(stringtemp_arrive_clg)
+            # array_arrive_clg= stringtemp_arrive_clg.split(':')
+            # heure_arrive_clg= int(array_arrive_clg[0])
+            # minute_arrive_clg= int(array_arrive_clg[1])
+            # seconde_arrive_clg= int(array_arrive_clg[2])
+            # if heure_arrive_clg < heure_min_arrive_clg:
+            #     heure_min_arrive_clg = heure_arrive_clg
+            #     minute_min_arrive_clg = minute_arrive_clg
+            #     seconde_min_arrive_clg = seconde_arrive_clg
+            # if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg < minute_min_arrive_clg:
+            #     heure_min_arrive_clg = heure_arrive_clg
+            #     minute_min_arrive_clg = minute_arrive_clg
+            #     seconde_min_arrive_clg = seconde_arrive_clg
+            # if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg == minute_min_arrive_clg and seconde_arrive_clg < seconde_min_arrive_clg:
+            #     heure_min_arrive_clg = heure_arrive_clg
+            #     minute_min_arrive_clg = minute_arrive_clg
+            #     seconde_min_arrive_clg = seconde_arrive_clg
 
         if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
             stringtemp_depart_clg=i['fields']['horaire_arrivee_theorique']
-            array_depart_clg = stringtemp_depart_clg.split(':')
-            heure_depart_clg = int(array_depart_clg[0])
-            minute_depart_clg = int(array_depart_clg[1])
-            seconde_depart_clg = int(array_depart_clg[2])
-            if heure_depart_clg < heure_min_depart_clg:
-                heure_min_depart_clg=heure_depart_clg
-                minute_min_depart_clg=minute_depart_clg
-                seconde_min_depart_clg=seconde_depart_clg
-            if heure_depart_clg == heure_min_depart_clg and minute_depart_clg < minute_min_depart_clg:
-                heure_min_depart_clg=heure_depart_clg
-                minute_min_depart_clg=minute_depart_clg
-                seconde_min_depart_clg=seconde_depart_clg
-            if heure_depart_clg == heure_min_depart_clg and minute_depart_clg == minute_min_depart_clg and seconde_depart_clg < seconde_min_depart_clg:
-                heure_min_depart_clg=heure_depart_clg
-                minute_min_depart_clg=minute_depart_clg
-                seconde_min_depart_clg=seconde_depart_clg
+            # array_depart_clg = stringtemp_depart_clg.split(':')
+            # heure_depart_clg = int(array_depart_clg[0])
+            # minute_depart_clg = int(array_depart_clg[1])
+            # seconde_depart_clg = int(array_depart_clg[2])
+            # if heure_depart_clg < heure_min_depart_clg:
+            #     heure_min_depart_clg=heure_depart_clg
+            #     minute_min_depart_clg=minute_depart_clg
+            #     seconde_min_depart_clg=seconde_depart_clg
+            # if heure_depart_clg == heure_min_depart_clg and minute_depart_clg < minute_min_depart_clg:
+            #     heure_min_depart_clg=heure_depart_clg
+            #     minute_min_depart_clg=minute_depart_clg
+            #     seconde_min_depart_clg=seconde_depart_clg
+            # if heure_depart_clg == heure_min_depart_clg and minute_depart_clg == minute_min_depart_clg and seconde_depart_clg < seconde_min_depart_clg:
+            #     heure_min_depart_clg=heure_depart_clg
+            #     minute_min_depart_clg=minute_depart_clg
+            #     seconde_min_depart_clg=seconde_depart_clg
+        await ctx.send(heure_mini_fonc(string_depart))
+        await ctx.send(string_depart)
 
 
-    await ctx.send(f"Le tram 3 arrivera à l'arret College Hawking à {heure_min_arrive_clg}:{minute_min_arrive_clg}:{seconde_min_arrive_clg} et il partira en direction du Chateau à {heure_min_depart_clg}:{minute_min_depart_clg}:{seconde_min_depart_clg}")
+    await ctx.send(f"Le prochaine tram en provenance de Chateau Quatran arrivera à {heure_min_arrive_clg}:{minute_min_arrive_clg}:{seconde_min_arrive_clg} et le prochain tram direction du Chateau partira à {heure_min_depart_clg}:{minute_min_depart_clg}:{seconde_min_depart_clg}")
 
+
+@bot.command(pass_contexte=True) #Display timetable of each line
+async def tram(ctx,arg=None):
+    if arg == "3":
+        with open('data.txt') as json_file:
+            data_tram3 = json.load(json_file)
+
+        for i in data_tram3:
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
+                stringtemp_arrive_clg=i['fields']['horaire_arrivee_theorique']
+                print(stringtemp_arrive_clg)
+    if arg == "2":
+        await ctx.send("ligne 2")
+    if arg == "1":
+        await ctx.send("ligne 1")
+    if arg != '1' and arg != '2' and arg != "3":
+        await ctx.send("Please choose a number between 1 and 3, use can use the command `r!tram 3`")
 
 print("Bot Read to use :)")
 bot.run(token)
