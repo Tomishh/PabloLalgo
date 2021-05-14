@@ -47,3 +47,4 @@ def tram3():
 
 
 tram3()
+time.sleep(10000)

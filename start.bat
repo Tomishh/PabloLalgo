@@ -1,6 +1,6 @@
 @echo off
 start data.bat
-title Loading... By El Mano
+title Discord Bot - Python
 color 0a
 set load=
 set/a loadnum=0

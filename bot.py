@@ -18,7 +18,7 @@ def heure_mini_fonc(liste_timing):
     min_min = 60
     sec_min = 60
     for i in liste_timing:
-        liste_cut=liste_timing[i]
+        liste_cut=i
         array=liste_cut.split(':')
         heure=int(array[0])
         minute=int(array[1])
@@ -27,11 +27,11 @@ def heure_mini_fonc(liste_timing):
             h_min = heure
             min_min = minute
             sec_min = seconde
-        if heure < h_min and minute < min_min :
+        if heure == h_min and minute < min_min :
             h_min = heure
             min_min = minute
             sec_min = seconde
-        if  heure < h_min and minute < min_min and seconde < sec_min:
+        if  heure == h_min and minute == min_min and seconde < sec_min:
             h_min = heure
             min_min = minute
             sec_min = seconde
@@ -130,63 +130,25 @@ async def duel(ctx):
 
 @bot.command(pass_contexte=True) #show hour lines
 async def tram3(ctx):
-    #Initialise the maximum date of the tram entry.
-    heure_min_arrive_clg =24
-    minute_min_arrive_clg =60 
-    seconde_min_arrive_clg =60
-
-    heure_min_depart_clg =24
-    minute_min_depart_clg =60
-    seconde_min_depart_clg=60
 
     with open('data.txt') as json_file:
         data = json.load(json_file)
-        string_arrive = []
         string_depart = []
+        string_arrive = []
     for i in data:
         if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
             stringtemp_arrive_clg=i['fields']['horaire_arrivee_theorique']
-            string_depart.append(stringtemp_arrive_clg)
-            # array_arrive_clg= stringtemp_arrive_clg.split(':')
-            # heure_arrive_clg= int(array_arrive_clg[0])
-            # minute_arrive_clg= int(array_arrive_clg[1])
-            # seconde_arrive_clg= int(array_arrive_clg[2])
-            # if heure_arrive_clg < heure_min_arrive_clg:
-            #     heure_min_arrive_clg = heure_arrive_clg
-            #     minute_min_arrive_clg = minute_arrive_clg
-            #     seconde_min_arrive_clg = seconde_arrive_clg
-            # if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg < minute_min_arrive_clg:
-            #     heure_min_arrive_clg = heure_arrive_clg
-            #     minute_min_arrive_clg = minute_arrive_clg
-            #     seconde_min_arrive_clg = seconde_arrive_clg
-            # if heure_arrive_clg == heure_min_arrive_clg and minute_arrive_clg == minute_min_arrive_clg and seconde_arrive_clg < seconde_min_arrive_clg:
-            #     heure_min_arrive_clg = heure_arrive_clg
-            #     minute_min_arrive_clg = minute_arrive_clg
-            #     seconde_min_arrive_clg = seconde_arrive_clg
+            string_arrive.append(stringtemp_arrive_clg)
+
 
         if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
             stringtemp_depart_clg=i['fields']['horaire_arrivee_theorique']
-            # array_depart_clg = stringtemp_depart_clg.split(':')
-            # heure_depart_clg = int(array_depart_clg[0])
-            # minute_depart_clg = int(array_depart_clg[1])
-            # seconde_depart_clg = int(array_depart_clg[2])
-            # if heure_depart_clg < heure_min_depart_clg:
-            #     heure_min_depart_clg=heure_depart_clg
-            #     minute_min_depart_clg=minute_depart_clg
-            #     seconde_min_depart_clg=seconde_depart_clg
-            # if heure_depart_clg == heure_min_depart_clg and minute_depart_clg < minute_min_depart_clg:
-            #     heure_min_depart_clg=heure_depart_clg
-            #     minute_min_depart_clg=minute_depart_clg
-            #     seconde_min_depart_clg=seconde_depart_clg
-            # if heure_depart_clg == heure_min_depart_clg and minute_depart_clg == minute_min_depart_clg and seconde_depart_clg < seconde_min_depart_clg:
-            #     heure_min_depart_clg=heure_depart_clg
-            #     minute_min_depart_clg=minute_depart_clg
-            #     seconde_min_depart_clg=seconde_depart_clg
-        await ctx.send(heure_mini_fonc(string_depart))
-        await ctx.send(string_depart)
+            string_depart.append(stringtemp_depart_clg)
 
+    depart=heure_mini_fonc(string_depart)
+    arrivee=heure_mini_fonc(string_arrive)
 
-    await ctx.send(f"Le prochaine tram en provenance de Chateau Quatran arrivera à {heure_min_arrive_clg}:{minute_min_arrive_clg}:{seconde_min_arrive_clg} et le prochain tram direction du Chateau partira à {heure_min_depart_clg}:{minute_min_depart_clg}:{seconde_min_depart_clg}")
+    await ctx.send(f"Le prochain tram en direction de 'Collège HAWKING' arrive à l'arret 'Collège HAWKING' à {arrivee}\n Le prochain tram en direction de 'Chateau Quatran' arrive à l'arret 'Collège HAWKING' à {depart}")
 
 
 @bot.command(pass_contexte=True) #Display timetable of each line
@@ -194,11 +156,94 @@ async def tram(ctx,arg=None):
     if arg == "3":
         with open('data.txt') as json_file:
             data_tram3 = json.load(json_file)
+            string_depart_clg_hawking = []
+            string_arrive_clg_hawking = []
 
+            string_depart_grace_de_dieu=[]
+            string_arrive_grace_de_dieu=[]
+
+            string_depart_lycee_rostand =[]
+            string_arrive_lycee_rostand =[]
+
+            string_depart_aviation=[]
+            string_arrive_aviation=[]
+
+            # string_depart=[]
+            # string_arrive=[]
+
+            # string_depart=[]
+            # string_arrive=[]
+
+            # string_depart=[]
+            # string_arrive=[]
         for i in data_tram3:
+
+            #Collège Hawking Stop
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
+                stringtemp_depart_clg_hawking=i['fields']['horaire_arrivee_theorique']
+                string_depart_clg_hawking.append(stringtemp_depart_clg_hawking)           
             if i['fields']['nom_de_l_arret_stop_name'] == "Caen-COLLEGE HAWKING-COLLEGE HAWKING" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
-                stringtemp_arrive_clg=i['fields']['horaire_arrivee_theorique']
-                print(stringtemp_arrive_clg)
+                stringtemp_arrive_clg_hawking=i['fields']['horaire_arrivee_theorique']
+                string_arrive_clg_hawking.append(stringtemp_arrive_clg_hawking)
+
+            #Grace de dieu Stop
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-GRACE DE DIEU-GRACE DE DIEU" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
+                stringtemp_depart_grace_de_dieu =i['fields']['horaire_arrivee_theorique']
+                string_depart_grace_de_dieu.append(stringtemp_depart_grace_de_dieu)
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-GRACE DE DIEU-GRACE DE DIEU" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
+                stringtemp_arrive_grace_de_dieu=i['fields']['horaire_arrivee_theorique']
+                string_arrive_grace_de_dieu.append(stringtemp_arrive_grace_de_dieu)
+
+            #Lycée Rostand Stop
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-Rostand-Fresnel-ROSTAND FRESNEL" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
+                stringtemp_depart_lycee_rostand=i['fields']['horaire_arrivee_theorique']
+                string_depart_lycee_rostand.append(stringtemp_depart_lycee_rostand)
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-Rostand-Fresnel-ROSTAND FRESNEL" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
+                stringtemp_arrive_lycee_rostand=i['fields']['horaire_arrivee_theorique']
+                string_arrive_lycee_rostand.append(stringtemp_arrive_lycee_rostand)
+
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-AVIATION-AVIATION" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
+                stringtemp_depart_aviation =i['fields']['horaire_arrivee_theorique']
+                string_depart_aviation.append(stringtemp_depart_aviation)
+            if i['fields']['nom_de_l_arret_stop_name'] == "Caen-AVIATION-AVIATION" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
+                stringtemp_arrive_aviation=i['fields']['horaire_arrivee_theorique']
+                string_arrive_aviation.append(stringtemp_arrive_aviation)
+      
+
+        depart_clg_hawking=heure_mini_fonc(string_depart_clg_hawking)
+        arrive_clg_hawking=heure_mini_fonc(string_arrive_clg_hawking)
+
+        depart_grace_de_dieu=heure_mini_fonc(string_depart_grace_de_dieu)
+        arrive_grace_de_dieu=heure_mini_fonc(string_arrive_grace_de_dieu)
+
+        depart_lycee_rostand=heure_mini_fonc(string_depart_lycee_rostand)
+        arrive_lycee_rostand=heure_mini_fonc(string_arrive_lycee_rostand)
+
+        depart_aviation=heure_mini_fonc(string_depart_aviation)
+        arrive_aviation=heure_mini_fonc(string_arrive_aviation)
+
+
+        depart=heure_mini_fonc(string_depart)
+        arrivee=heure_mini_fonc(string_arrive)
+        await ctx.send(f""">>> Tram 3 : :trolleybus: :small_red_triangle: : "Direction Chateau Quatrans" | :small_red_triangle_down: : Direction "Collège Hawking"
+        Arret Aviation : :small_red_triangle: : {depart_aviation} :small_red_triangle_down: : {arrive_aviation} 
+        Arret Lycée Rostand : :small_red_triangle: : {depart_lycee_rostand} :small_red_triangle_down: : {arrive_lycee_rostand}  
+        Arret Grace de dieu : :small_red_triangle: : {depart_grace_de_dieu} :small_red_triangle_down: : {arrive_grace_de_dieu}
+        Arret Collège Hawking : :small_red_triangle: : {depart_clg_hawking} :small_red_triangle_down: : {arrive_clg_hawking}""")   
+
+        
+            # if i['fields']['nom_de_l_arret_stop_name'] == "" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'CAEN Ch\u00e2teau Quatrans':
+            #     stringtemp_depart =i['fields']['horaire_arrivee_theorique']
+            #     string_depart.append(stringtemp_depart)
+            # if i['fields']['nom_de_l_arret_stop_name'] == "" and i['fields']['ligne'] == 'T3' and i['fields']['destination_stop_headsign'] == 'FLEURY Clg Hawking':
+            #     stringtemp_arrive=i['fields']['horaire_arrivee_theorique']
+            #     string_arrive.append(stringtemp_arrive)
+
+        # depart=heure_mini_fonc(string_depart)
+        # arrive=heure_mini_fonc(string_arrive)
+
+        #Arret : :small_red_triangle: : {} :small_red_triangle_down: : {} 
+                
     if arg == "2":
         await ctx.send("ligne 2")
     if arg == "1":
